@@ -1,5 +1,3 @@
-// src/components/ProductItem.tsx
-
 import {
   Button,
   Card,
@@ -7,6 +5,7 @@ import {
   CardMedia,
   Typography,
 } from "@mui/material";
+import React from "react";
 import { Product } from "../types";
 
 interface ProductItemProps {
@@ -14,38 +13,29 @@ interface ProductItemProps {
   addToCart: (product: Product) => void;
 }
 
-const ProductItem = ({ product, addToCart }: ProductItemProps) => {
+const ProductItem: React.FC<ProductItemProps> = ({ product, addToCart }) => {
   return (
-    <Card
-      sx={{
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
+    <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
       <CardMedia
         component="img"
         image={product.image}
         alt={product.title}
-        sx={{
-          height: 140,
-          objectFit: "contain",
-          padding: 1,
-        }}
+        sx={{ height: 140, objectFit: "contain", padding: 1 }}
       />
       <CardContent sx={{ flexGrow: 1 }}>
         <Typography gutterBottom variant="h6">
           {product.title}
         </Typography>
         <Typography variant="body1">価格: ${product.price}</Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => addToCart(product)}
-        >
-          カートに追加
-        </Button>
       </CardContent>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => addToCart(product)}
+        sx={{ margin: 1 }}
+      >
+        カートに追加
+      </Button>
     </Card>
   );
 };

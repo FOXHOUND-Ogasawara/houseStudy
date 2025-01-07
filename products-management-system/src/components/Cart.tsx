@@ -1,5 +1,3 @@
-// src/components/Cart.tsx
-
 import CloseIcon from "@mui/icons-material/Close";
 import {
   Button,
@@ -9,7 +7,7 @@ import {
   List,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import React from "react";
 import { Product } from "../types";
 import CartItem from "./CartItem";
 
@@ -18,13 +16,10 @@ interface CartProps {
   removeFromCart: (productId: number) => void;
 }
 
-const Cart = ({ cartItems, removeFromCart }: CartProps) => {
-  const totalPrice = cartItems.reduce(
-    (sum, item) => sum + item.price * (item.quantity || 1),
-    0
-  );
+const Cart: React.FC<CartProps> = ({ cartItems, removeFromCart }) => {
+  const totalPrice = cartItems.reduce((acc, item) => acc + item.price, 0);
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = React.useState(false);
 
   return (
     <>
@@ -32,12 +27,7 @@ const Cart = ({ cartItems, removeFromCart }: CartProps) => {
         variant="contained"
         color="secondary"
         onClick={() => setOpen(true)}
-        sx={{
-          position: "fixed",
-          top: 16,
-          right: 16,
-          zIndex: 1300,
-        }}
+        sx={{ position: "fixed", top: 16, right: 16, zIndex: 1300 }}
       >
         カート ({cartItems.length})
       </Button>

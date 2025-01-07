@@ -1,15 +1,11 @@
-// src/pages/Home.tsx
-
 import {
-  Box,
-  CircularProgress,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ProductList from "../components/ProductList";
 import { Product } from "../types";
 
@@ -17,74 +13,37 @@ interface HomeProps {
   addToCart: (product: Product) => void;
 }
 
-const Home = ({ addToCart }: HomeProps) => {
+const Home: React.FC<HomeProps> = ({ addToCart }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // 商品データの取得
     fetch("https://fakestoreapi.com/products")
-      .then((response) => response.json())
-      .then((data) => {
+      .then((res) => res.json())
+      .then((data: Product[]) => {
         setProducts(data);
       })
-      .catch((error) => {
-        console.log("商品データの取得に失敗しました:", error);
-      })
-      .finally(() => {
-        setLoading(false);
+      .catch((err) => {
+        console.error(err);
       });
 
+    // カテゴリデータの取得
     fetch("https://fakestoreapi.com/products/categories")
-      .then((response) => response.json())
-      .then((data) => {
+      .then((res) => res.json())
+      .then((data: string[]) => {
         setCategories(data);
       })
-      .catch((error) => {
-        console.log("カテゴリーの取得に失敗しました:", error);
+      .catch((err) => {
+        console.error(err);
       });
   }, []);
 
-  const handleCategoryChange = (
-    event: React.ChangeEvent<{ value: unknown }>
-  ) => {
-    setSelectedCategory(event.target.value as string);
-    setLoading(true);
-
-    const category = event.target.value as string;
-    const url =
-      category === "all"
-        ? "https://fakestoreapi.com/products"
-        : `https://fakestoreapi.com/products/category/${category}`;
-
-    fetch(url)
-      .then((response) => response.json())
-      .then((data) => {
-        setProducts(data);
-      })
-      .catch((error) => {
-        console.log("商品データの取得に失敗しました:", error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
-  if (loading) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
+  const filteredProducts =
+    selectedCategory === "all"
+      ? products
+      : products.filter((product) => product.category === selectedCategory);
 
   return (
     <div>
@@ -97,7 +56,7 @@ const Home = ({ addToCart }: HomeProps) => {
           labelId="category-select-label"
           value={selectedCategory}
           label="カテゴリで絞り込み"
-          onChange={handleCategoryChange}
+          onChange={(e) => setSelectedCategory(e.target.value as string)}
         >
           <MenuItem value="all">全て</MenuItem>
           {categories.map((category) => (
@@ -107,7 +66,7 @@ const Home = ({ addToCart }: HomeProps) => {
           ))}
         </Select>
       </FormControl>
-      <ProductList products={products} addToCart={addToCart} />
+      <ProductList products={filteredProducts} addToCart={addToCart} />
     </div>
   );
 };

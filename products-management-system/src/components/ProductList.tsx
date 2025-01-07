@@ -1,6 +1,5 @@
-// src/components/ProductList.tsx
-
 import { Grid } from "@mui/material";
+import React from "react";
 import { Product } from "../types";
 import ProductItem from "./ProductItem";
 
@@ -9,7 +8,7 @@ interface ProductListProps {
   addToCart: (product: Product) => void;
 }
 
-const ProductList = ({ products, addToCart }: ProductListProps) => {
+const ProductList: React.FC<ProductListProps> = ({ products, addToCart }) => {
   return (
     <Grid container spacing={2}>
       {products.map((product) => (

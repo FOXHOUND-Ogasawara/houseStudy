@@ -1,7 +1,6 @@
-// src/components/CartItem.tsx
-
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton, ListItem, ListItemText } from "@mui/material";
+import React from "react";
 import { Product } from "../types";
 
 interface CartItemProps {
@@ -9,7 +8,7 @@ interface CartItemProps {
   removeFromCart: (productId: number) => void;
 }
 
-const CartItem = ({ item, removeFromCart }: CartItemProps) => {
+const CartItem: React.FC<CartItemProps> = ({ item, removeFromCart }) => {
   return (
     <ListItem
       secondaryAction={
@@ -22,10 +21,7 @@ const CartItem = ({ item, removeFromCart }: CartItemProps) => {
         </IconButton>
       }
     >
-      <ListItemText
-        primary={`${item.title} x${item.quantity}`}
-        secondary={`価格: $${item.price * (item.quantity || 1)}`}
-      />
+      <ListItemText primary={item.title} secondary={`価格: $${item.price}`} />
     </ListItem>
   );
 };
