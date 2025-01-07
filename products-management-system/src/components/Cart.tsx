@@ -1,15 +1,17 @@
-import { useState } from "react";
-import {
-  Drawer,
-  Typography,
-  List,
-  Divider,
-  IconButton,
-  Button,
-} from "@mui/material";
+// src/components/Cart.tsx
+
 import CloseIcon from "@mui/icons-material/Close";
+import {
+  Button,
+  Divider,
+  Drawer,
+  IconButton,
+  List,
+  Typography,
+} from "@mui/material";
+import { useState } from "react";
 import { Product } from "../types";
-// import CartItem from './CartItem';
+import CartItem from "./CartItem";
 
 interface CartProps {
   cartItems: Product[];
@@ -17,7 +19,10 @@ interface CartProps {
 }
 
 const Cart = ({ cartItems, removeFromCart }: CartProps) => {
-  const totalPrice = 0;
+  const totalPrice = cartItems.reduce(
+    (sum, item) => sum + item.price * (item.quantity || 1),
+    0
+  );
 
   const [open, setOpen] = useState(false);
 
@@ -27,7 +32,12 @@ const Cart = ({ cartItems, removeFromCart }: CartProps) => {
         variant="contained"
         color="secondary"
         onClick={() => setOpen(true)}
-        sx={{ position: "fixed", top: 16, right: 16, zIndex: 1300 }}
+        sx={{
+          position: "fixed",
+          top: 16,
+          right: 16,
+          zIndex: 1300,
+        }}
       >
         カート ({cartItems.length})
       </Button>
@@ -47,8 +57,13 @@ const Cart = ({ cartItems, removeFromCart }: CartProps) => {
           ) : (
             <>
               <List>
-                {/* TODO: CartItemを表示 */}
-                {/* <CartItem item={} removeFromCart={removeFromCart} /> */}
+                {cartItems.map((item) => (
+                  <CartItem
+                    key={item.id}
+                    item={item}
+                    removeFromCart={removeFromCart}
+                  />
+                ))}
               </List>
               <Divider />
               <Typography variant="h6" sx={{ marginTop: 2 }}>
